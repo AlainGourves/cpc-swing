@@ -1,0 +1,94 @@
+@use "sass:math";
+@import "boo";
+@import "mixins";
+
+$pan-w: 14rem;
+$pan-h: 3.5rem;
+$pan-p: .125rem; // "padding" between 2 panels
+$persp-x: 160%;
+$persp-y: 100%;
+$theta: -30;
+
+:root {
+  --px: #{$persp-x};
+  --py: #{$persp-y};
+  --theta: #{$theta}deg;
+}
+
+body,
+html {
+  height: 100%;
+  display: grid;
+  background: rgb(255, 255, 255);
+}
+
+body {
+  place-content: center;
+}
+
+main {
+  @include size(26rem);
+  max-width: 60vw;
+  max-height: 60vh;
+  @include grid-center();
+  background-color: aquamarine;
+}
+
+.panels__container {
+  perspective: 30rem;
+  perspective-origin: var(--px) var(--py);
+
+  &::after {
+    // perspective's origin point
+    content: '';
+    position: absolute;
+    top: var(--py);
+    left: var(--px);
+    @include size(0);
+    border: 4px solid green;
+    border-radius: 50%;
+    z-index: 666;
+  }
+}
+
+.panels__container,
+.panel__cont {
+  position: relative;
+}
+
+.panel__cont {
+  transform-style: preserve-3d;
+  transform-origin: top center;
+  animation: 2s swing alternate infinite ease-in-out;
+}
+
+.panel {
+  width: $pan-w;
+  height: $pan-h;
+  background: deeppink;
+  // backface-visibility: hidden;
+  & + .panel__cont{
+    top: $pan-p;
+    left: 0;
+  }
+}
+
+@keyframes swing {
+  from {
+    transform: rotateX(var(--theta));
+  }
+
+  to {
+    transform: rotateX(calc(var(--theta) * -1));
+  }
+}
+
+// Image
+
+.panel{
+  background-image: url(/img/bird.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center calc((var(--i) - 1) * #{$pan-h + $pan-p} * -1);
+  transition: transform 0.1s linear;
+}

@@ -1,0 +1,35 @@
+$w: 2rem;
+
+:root {
+  --n: 0;
+  --hue: 0;
+}
+
+.boo {
+  width: 12rem;
+  min-height: $w * 2;
+  background-color: deepskyblue;
+  position: relative;
+}
+
+.box {
+  width: 0;
+  height: 0;
+  padding: $w;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: hsl(var(--hue), 100%, 50%);
+  animation: a 1s ease-in-out infinite alternate;
+}
+
+@keyframes a {
+  from {
+    left: 0;
+  }
+
+  to {
+    left: calc(100% - #{2 * $w});
+  }
+
+}
