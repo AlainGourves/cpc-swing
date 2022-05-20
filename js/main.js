@@ -1,11 +1,9 @@
 const animated = document.querySelector('.box');
 const swing = document.querySelector('.panels__container');
-const nbPanels = document.querySelectorAll('.panel').length;
+const panels = document.querySelectorAll('.panel__cont');
+const nbPanels = panels.length;
 const root = document.documentElement;
 
-const newAngle = (theta, n) => {
-    return Math.exp(-0.05 * n * n) * theta; // * theta;
-}
 
 window.addEventListener("load", e => {
     if (animated) {
@@ -17,19 +15,49 @@ window.addEventListener("load", e => {
         });
     }
 
-    if (swing) {
-        let count = 0;
-        swing.addEventListener('animationiteration', ev => {
-            let theta = window.getComputedStyle(root).getPropertyValue('--theta');
-            count++;
-            if(count % nbPanels === 0) {
-                // console.log('yé!', theta, Date.now())
-                if (parseInt(theta) - 1 >=0) {
-                    root.style.setProperty('--theta', `${parseInt(theta) -1}deg`);
-                }else{
-                    // terminer l'anim
-                }
-            }
-        });
+    let theta = parseInt(window.getComputedStyle(root).getPropertyValue('--theta'));
+    let count = 0;
+    // const log = () => {
+    //     let count = anim.iteration();
+    // };
+
+    const newAngle = () => {
+        return Math.exp(-0.05 * count * count) * theta;
     }
+
+    const anim = gsap.fromTo(panels, {
+        rotationX: () => {
+            // return `${Math.exp(-0.05 * count * count) * theta}deg`;
+            return `${newAngle()}deg`
+        }
+    }, {
+        rotationX: () => {
+            // return `${Math.exp(-0.05 * count * count) * -theta}deg`;
+            return `${newAngle() * -1}deg`
+        },
+        ease: 'sine.inOut',
+        repeat: -1,
+        repeatRefresh: true,
+        yoyo: true,
+        duration: 1,
+        onRepeat: () => {
+            count++;
+        },
+    });
+
+    // if (swing) {
+    //     let count = 0;
+    //     swing.addEventListener('animationiteration', ev => {
+    //         let theta = window.getComputedStyle(root).getPropertyValue('--theta');
+    //         count++;
+    //         if(count % nbPanels === 0) {
+    //             // console.log('yé!', theta, Date.now())
+    //             if (parseInt(theta) - 1 >=0) {
+    //                 root.style.setProperty('--theta', `${parseInt(theta) -1}deg`);
+    //             }else{
+    //                 // terminer l'anim
+    //             }
+    //         }
+    //     });
+    // }
 });

@@ -2,8 +2,8 @@
 @import "boo";
 @import "mixins";
 
-$pan-w: 14rem;
-$pan-h: 3.5rem;
+$pan-w: 12rem;
+$pan-h: 2.8rem;
 $pan-p: .125rem; // "padding" between 2 panels
 $persp-x: 160%;
 $persp-y: 100%;
@@ -59,33 +59,34 @@ main {
 .panel__cont {
   transform-style: preserve-3d;
   transform-origin: top center;
-  animation: 2s swing alternate infinite ease-in-out;
+  transform:  rotateX(var(--theta));
+  // animation: 2s swing alternate infinite ease-in-out;
 }
 
 .panel {
   width: $pan-w;
   height: $pan-h;
   background: deeppink;
-  // backface-visibility: hidden;
-  & + .panel__cont{
+
+  &+.panel__cont {
     top: $pan-p;
     left: 0;
   }
 }
 
-@keyframes swing {
-  from {
-    transform: rotateX(var(--theta));
-  }
+// @keyframes swing {
+//   from {
+//     transform: rotateX(var(--theta));
+//   }
 
-  to {
-    transform: rotateX(calc(var(--theta) * -1));
-  }
-}
+//   to {
+//     transform: rotateX(calc(var(--theta) * -1));
+//   }
+// }
 
 // Image
 
-.panel{
+.panel {
   background-image: url(/img/bird.png);
   background-size: cover;
   background-repeat: no-repeat;
