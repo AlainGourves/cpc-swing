@@ -14,12 +14,13 @@ window.addEventListener("load", e => {
     }
 
     const introAnim = () => {
-        const tl = gsap.timeline({repeatRefresh: true})
+        const tl = gsap.timeline({ repeatRefresh: true })
             .from('.panel', {
                 opacity: 0,
                 stagger: {
                     each: 0.1,
-                    from: 'start'
+                    from: 'start',
+                    ease: "power1.in"
                 }
             })
         return tl;
@@ -29,50 +30,46 @@ window.addEventListener("load", e => {
         const tl = gsap.timeline({
             repeat: -1,
             repeatRefresh: true,
-            // paused: true,
-            defaults: {
-                duration: .5,
-            },
+            // yoyo: true,
         });
-        tl.fromTo(panels, {
-            rotationX: () => theta,
-        }, {
-            rotationX: 0,
-            ease: 'sine.in',
-            onComplete: () => {
-                theta = newAngle();
-                count++;
-            },
-        });
-        tl.fromTo(panels, {
-            rotationX: 0
-        }, {
-            rotationX: () => -theta,
-            ease: 'sine.out',
-        });
-        tl.fromTo(panels, {
-            rotationX: () => -theta,
-        },
-            {
-                rotationX: 0,
-                ease: 'sine.in',
-                onComplete: () => {
-                    theta = newAngle();
-                    if (Math.abs(theta) <= 0.01) {
-                        console.log('finito!')
-                        tl.pause();
-                        theta = parseInt(window.getComputedStyle(root).getPropertyValue('--theta'));
-                        count = 0;
+        tl.to(panels, {
+            keyframes: {
+                "0%": { rotationX: () => theta, ease: "none" },
+                "25%": {
+                    rotationX: 0,
+                    duration: 0,
+                    ease: "sine.in",
+                    onComplete: () => {
+                        theta = newAngle();
+                        count++;
+                        if (Math.abs(theta) <= 0.01) {
+                            theta = parseInt(window.getComputedStyle(root).getPropertyValue('--theta'));
+                            count = 0;
+                            tl.pause();
+                            console.log('finito!')
+                        }
                     }
-                    count++;
                 },
-            });
-        tl.fromTo(panels, {
-            rotationX: 0
-        }, {
-            ease: 'sine.out',
-            rotationX: () => theta,
-        });
+                "50%": { rotationX: () => -theta, ease: "none" },
+                "75%": {
+                    rotationX: 0,
+                    duration: 0,
+                    ease: "sine.in",
+                    onComplete: () => {
+                        theta = newAngle();
+                        count++;
+                        if (Math.abs(theta) <= 0.01) {
+                            theta = parseInt(window.getComputedStyle(root).getPropertyValue('--theta'));
+                            count = 0;
+                            tl.pause();
+                            console.log('finito!')
+                        }
+                    }
+                },
+                "100%": { rotationX: () => theta, ease: "none" }
+            },
+            duration: 2,
+        })
         return tl;
     }
 
