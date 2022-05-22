@@ -4,16 +4,19 @@
 
 $pan-w: 16rem;
 $pan-h: 3.5rem;
-$pan-t: .25rem; // thickness
+$pan-t: .5rem; // thickness
 $pan-p: .125rem; // "padding" between 2 panels
 $persp-x: 90%;
 $persp-y: 30%;
-$theta: -40;
+$theta: -45;
 
 :root {
   --px: #{$persp-x};
   --py: #{$persp-y};
   --theta: #{$theta}deg;
+  --hue: 66;
+  --sat: 88%;
+  --lig: 60%;
 }
 
 body,
@@ -32,13 +35,11 @@ main {
   max-width: 60vw;
   max-height: 60vh;
   @include grid-center();
-  background-color: aquamarine;
 }
 
 .panels__container {
   perspective: 30rem;
   perspective-origin: var(--px) var(--py);
-
 
   // &::after {
   //   // perspective's origin point
@@ -59,36 +60,18 @@ main {
   transform-style: preserve-3d;
 }
 
-.panels__container > .panel__cont {
+.panels__container>.panel__cont {
   animation: 8s rot ease-in-out infinite alternate;
 }
 
 .panel__cont {
   transform-origin: top center;
-  transform:  rotateX(var(--theta));
-  // animation: 2s swing alternate infinite ease-in-out;
-}
-
-.panel {
-  width: $pan-w;
-  height: $pan-h;
+  transform: rotateX(var(--theta));
 }
 
 .box+.panel__cont {
   top: $pan-p;
   left: 0;
-}
-
-
-// Image
-
-.panel {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3ctext y='1em' font-size='90'%3e🏌️‍♀️%3c/text%3e%3c/svg%3e");
-  // background-image: url(/img/mary.png);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center calc((var(--i) - 1) * #{$pan-h + $pan-p} * -1);
-  transition: transform 0.1s linear;
 }
 
 // Box
@@ -102,84 +85,83 @@ main {
   &>div {
     grid-area: 1 / 1;
     transform-style: preserve-3d;
-    background-color: hsl(56, 38%, 80%);
-    box-shadow: 0 0 1rem rgba(0, 0, 0, .125) inset;
+    background-color: hsl(var(--hue), var(--sat), var(--lig));
   }
 
-  &:last-of-type .back{
+  &:last-of-type .back {
     display: grid;
     place-content: center;
 
-    & span{
+    & span {
       font-family: sans-serif;
       font-weight: 700;
-      color: rebeccapurple;
+      color: hsl(0, var(--sat), var(--lig));
       text-transform: uppercase;
       transform: rotateX(180deg);
+      opacity: 0;
     }
   }
-}
 
-.front,
-.back {
-  width: $pan-w;
-  height: $pan-h;
-}
-
-.left,
-.right {
-  width: $pan-t;
-  height: $pan-h;
-}
-
-.top,
-.bottom {
-  width: $pan-w;
-  height: $pan-t;
-}
-
-.back {
-  transform: translateZ(-$pan-t);
-}
-
-.top {
-  transform-origin: bottom center;
-  transform: translateY(-$pan-t) rotateX(90deg);
-}
-
-.bottom {
-  transform-origin: top center;
-  transform: translateY($pan-h) rotateX(-90deg);
-}
-
-.left {
-  transform-origin: right center;
-  transform: translateX(-$pan-t) rotateY(-90deg);
-}
-
-.right {
-  transform-origin: left center;
-  transform: translateX($pan-w) rotateY(90deg);
-}
-
-
-
-@keyframes swing {
-  from {
-    transform: rotateX(var(--theta));
+  .front,
+  .back {
+    width: $pan-w;
+    height: $pan-h;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, .125) inset;
   }
 
-//   to {
-//     transform: rotateX(calc(var(--theta) * -1));
-//   }
-// }
+  .left,
+  .right {
+    width: $pan-t;
+    height: $pan-h;
+    background-color: hsl(var(--hue), var(--sat), calc(var(--lig) - 18%)) !important;
+  }
+
+  .top,
+  .bottom {
+    width: $pan-w;
+    height: $pan-t;
+  }
+
+  .back {
+    transform: translateZ(-$pan-t);
+  }
+
+  .top {
+    transform-origin: bottom center;
+    transform: translateY(-$pan-t) rotateX(90deg);
+  }
+
+  .bottom {
+    transform-origin: top center;
+    transform: translateY($pan-h) rotateX(-90deg);
+    background-color: hsl(var(--hue), var(--sat), calc(var(--lig) - 15%)) !important;
+  }
+
+  .left {
+    transform-origin: right center;
+    transform: translateX(-$pan-t) rotateY(-90deg);
+  }
+
+  .right {
+    transform-origin: left center;
+    transform: translateX($pan-w) rotateY(90deg);
+  }
+}
+
+// Image
+.panel {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3ctext y='1em' font-size='90'%3e🏌️‍♀️%3c/text%3e%3c/svg%3e");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center calc((var(--i) - 1) * #{$pan-h + $pan-p} * -1);
+}
 
 @keyframes rot {
   from {
-    transform: rotateY(-12deg)
+    transform: rotateY(18deg)
   }
 
   to {
-    transform: rotateY(24deg);
+    transform: rotateY(-24deg);
   }
 }

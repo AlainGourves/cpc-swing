@@ -10,12 +10,12 @@ window.addEventListener("load", e => {
     theta = parseInt(window.getComputedStyle(root).getPropertyValue('--theta'));
     count = 0;
     const newAngle = () => {
-        return Math.exp(-0.012 * count * count) * theta;
+        return Math.exp(-0.01 * count * count) * theta;
     }
 
     const introAnim = () => {
         const tl = gsap.timeline({ repeatRefresh: true })
-            .from('.panel', {
+            .from('.box', {
                 opacity: 0,
                 stagger: {
                     each: 0.1,
@@ -73,16 +73,26 @@ window.addEventListener("load", e => {
         return tl;
     }
 
-    const masterAnim = gsap.timeline({
-        repeatRefresh: true,
-    });
-    masterAnim
-        .add(introAnim())
-        .add(mainAnim(), '<'); // starts at the same time
+    const textAnim = () => {
+        const tl = gsap.timeline()
+            .to('.back span', { opacity: 1 });
+        return tl;
+    }
+
+    const masterAnim = () => {
+        const tl = gsap.timeline({
+            repeatRefresh: true,
+        });
+        tl.add(introAnim())
+            .add(mainAnim(), '<') // starts at the same time
+            .add(textAnim(), 1)
+        return tl;
+    }
+    masterAnim();
 
     restartBtn.addEventListener('click', ev => {
         theta = parseInt(window.getComputedStyle(root).getPropertyValue('--theta'));
         count = 0;
-        masterAnim.restart()
+        masterAnim()
     })
 });
