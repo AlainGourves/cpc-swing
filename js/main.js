@@ -7,34 +7,34 @@ let theta, count;
 
 window.addEventListener("load", e => {
 
-    theta = parseInt(window.getComputedStyle(root).getPropertyValue('--theta'));
-    count = 0;
     const newAngle = () => {
+        console.log('count:', count, 'theta:', theta)
         return Math.exp(-0.01 * count * count) * theta;
     }
 
     const introAnim = () => {
         const tl = gsap.timeline({ repeatRefresh: true })
-            .from('.box', {
-                opacity: 0,
-                stagger: {
-                    each: 0.1,
-                    from: 'start',
-                    ease: "power1.in"
-                }
-            })
+        .from('.box', {
+            opacity: 0,
+            stagger: {
+                each: 0.1,
+                from: 'start',
+                ease: "power1.in"
+            }
+        })
         return tl;
     }
 
     const mainAnim = () => {
+        theta = parseInt(window.getComputedStyle(root).getPropertyValue('--theta'));
+        count = 0;
         const tl = gsap.timeline({
             repeat: -1,
             repeatRefresh: true,
-            // yoyo: true,
         });
         tl.to(panels, {
             keyframes: {
-                "0%": { rotationX: () => theta, ease: "none" },
+                "0%": { rotationX: () => theta, ease: "sine.out" },
                 "25%": {
                     rotationX: 0,
                     duration: 0,
@@ -43,10 +43,8 @@ window.addEventListener("load", e => {
                         theta = newAngle();
                         count++;
                         if (Math.abs(theta) <= 0.01) {
-                            theta = parseInt(window.getComputedStyle(root).getPropertyValue('--theta'));
-                            count = 0;
                             tl.pause();
-                            console.log('finito!')
+                            console.log('main anim end')
                         }
                     }
                 },
@@ -58,15 +56,9 @@ window.addEventListener("load", e => {
                     onComplete: () => {
                         theta = newAngle();
                         count++;
-                        if (Math.abs(theta) <= 0.01) {
-                            theta = parseInt(window.getComputedStyle(root).getPropertyValue('--theta'));
-                            count = 0;
-                            tl.pause();
-                            console.log('finito!')
-                        }
                     }
                 },
-                "100%": { rotationX: () => theta, ease: "none" }
+                "100%": { rotationX: () => theta, ease: "sine.out" }
             },
             duration: 2,
         })
@@ -82,6 +74,7 @@ window.addEventListener("load", e => {
     const masterAnim = () => {
         const tl = gsap.timeline({
             repeatRefresh: true,
+            onComplete: () => console.log('fin master')
         });
         tl.add(introAnim())
             .add(mainAnim(), '<') // starts at the same time
@@ -91,8 +84,8 @@ window.addEventListener("load", e => {
     masterAnim();
 
     restartBtn.addEventListener('click', ev => {
-        theta = parseInt(window.getComputedStyle(root).getPropertyValue('--theta'));
-        count = 0;
+        // theta = parseInt(window.getComputedStyle(root).getPropertyValue('--theta'));
+        // count = 0;
         masterAnim()
     })
 });
